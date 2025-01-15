@@ -1,0 +1,26 @@
+name: Test
+
+on:
+  push:
+  workflow_dispatch:
+    inputs:
+      ref:
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Display inputs
+        run: ${{ toJson(inputs) }}
+        shell: jq --color-output . {0}
+
+      - name: Fetch ${{ inputs.ref }} (new)
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref }}
+
+      - name: Fetch ${{ inputs.ref }} (old)
+        if: always()
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref }}
